@@ -23,6 +23,12 @@ const assertPurchaseAmount = (amount: number) => {
   }
 };
 
+const assertPurchaseDate = (date: Date) => {
+  if (isNaN(date.valueOf())) {
+    throw new TypeError('`purchaseDate` is invalid.');
+  }
+};
+
 const assertDepreciationYears = (years: number) => {
   if (years < 1) {
     throw new TypeError('`totalDepreciationYears` is invalid.');
@@ -70,6 +76,7 @@ const calculateDepreciation = ({
   totalDepreciationYears,
 }: DepreciationInputs): DepreciationResult[] => {
   assertPurchaseAmount(purchaseAmount);
+  assertPurchaseDate(purchaseDate);
   assertDepreciationYears(totalDepreciationYears);
 
   const purchaseMonth: number = new Date(purchaseDate).getMonth() + 1;

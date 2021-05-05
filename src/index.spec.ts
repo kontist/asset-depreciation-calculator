@@ -247,6 +247,17 @@ describe("errors handler", () => {
     });
   });
 
+  it("should throw error if purchaseDate is incorrect", () => {
+    expect(() => calculateDepreciation({
+      purchaseAmount: 20000,
+      purchaseDate: new Date("invalid-date"),
+      totalDepreciationYears: 1,
+    })).toThrow({
+      name: 'TypeError',
+      message: '`purchaseDate` is invalid.'
+    });
+  });
+
   it("should throw error if totalDepreciationYears is incorrect", () => {
     expect(() => calculateDepreciation({
       purchaseAmount: 20000,
