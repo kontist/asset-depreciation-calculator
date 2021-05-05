@@ -86,7 +86,7 @@ const calculateDepreciation = ({
   let endAmount: number = purchaseAmount;
   let monthsLeftInLastYear: number = 0;
 
-  // If the price of the good is less than MINIMUM_NET_AMOUNT, the year is set to 0 automatically.
+  // If the price of the good is less than MINIMUM_PURCHASE_AMOUNT, the year is set to 0 automatically.
   if (purchaseAmount < MINIMUM_PURCHASE_AMOUNT) {
     return [{
       year: purchaseYear,
