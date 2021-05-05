@@ -7,8 +7,8 @@ type DepreciationResult = {
   depreciationMonths: number;
   depreciationAmount: number;
   percentage: number;
-  startValue: number;
-  endValue: number;
+  startAmount: number;
+  endAmount: number;
 }
 
 type DepreciationInputs = {
@@ -34,23 +34,23 @@ const toFixedTwo = (num: number): number => Math.round((num + Number.EPSILON) * 
 const calculate = (
   purchaseAmount: number,
   totalDepreciationYears: number,
-  previousEndValue: number,
+  previousEndAmount: number,
   monthsLeft: number = MONTHS_IN_YEAR
 ): {
   depreciationAmount: number;
   percentage: number;
-  startValue: number;
-  endValue: number;
+  startAmount: number;
+  endAmount: number;
 } => {
   const depreciationAmount = toFixedTwo((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
   const percentage = toFixedTwo((depreciationAmount / purchaseAmount) * 100);
-  const newEndValue = toFixedTwo(previousEndValue - depreciationAmount);
+  const newEndAmount = toFixedTwo(previousEndAmount - depreciationAmount);
 
   return {
     depreciationAmount,
     percentage,
-    startValue: previousEndValue,
-    endValue: newEndValue,
+    startAmount: previousEndAmount,
+    endAmount: newEndAmount,
   };
 };
 
@@ -66,7 +66,7 @@ const calculateDepreciation = ({
   const purchaseYear: number = new Date(purchaseDate).getFullYear();
   const results: DepreciationResult[] = [];
 
-  let endValue: number = purchaseAmount;
+  let endAmount: number = purchaseAmount;
   let monthsLeftInLastYear: number = 0;
 
   // If the price of the good is less than MINIMUM_NET_AMOUNT, the year is set to 0 automatically.
@@ -76,8 +76,8 @@ const calculateDepreciation = ({
       depreciationMonths: MONTHS_IN_YEAR - purchaseMonth + 1,
       depreciationAmount: purchaseAmount,
       percentage: 100,
-      startValue: purchaseAmount,
-      endValue: 0,
+      startAmount: purchaseAmount,
+      endAmount: 0,
     }]
   }
 
@@ -85,13 +85,13 @@ const calculateDepreciation = ({
     // Current year
     if (index === 0) {
       const monthsLeftInFirstYear = MONTHS_IN_YEAR - purchaseMonth + 1;
-      const result = calculate(purchaseAmount, totalDepreciationYears, endValue, monthsLeftInFirstYear);
+      const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsLeftInFirstYear);
       results.push({
         year: purchaseYear,
         depreciationMonths: monthsLeftInFirstYear,
         ...result,
       });
-      endValue = result.endValue;
+      endAmount = result.endAmount;
 
       // If item is purchased in Jan, monthsLeftInLastYear is 0
       // If item is purchased in Dec, monthsLeftInLastYear is 11
@@ -100,13 +100,13 @@ const calculateDepreciation = ({
 
     // Future years
     if (index > 0) {
-      const result = calculate(purchaseAmount, totalDepreciationYears, endValue);
+      const result = calculate(purchaseAmount, totalDepreciationYears, endAmount);
       results.push({
         year: purchaseYear + index,
         depreciationMonths: MONTHS_IN_YEAR,
         ...result,
       });
-      endValue = result.endValue;
+      endAmount = result.endAmount;
     }
   }
 
@@ -114,7 +114,7 @@ const calculateDepreciation = ({
     results.push({
       year: purchaseYear + totalDepreciationYears,
       depreciationMonths: monthsLeftInLastYear,
-      ...calculate(purchaseAmount, totalDepreciationYears, endValue, monthsLeftInLastYear),
+      ...calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsLeftInLastYear),
     });
   }
 
