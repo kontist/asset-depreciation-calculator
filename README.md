@@ -15,7 +15,7 @@ const calculateDepreciation = require("asset-depreciation-calculator");
 
 calculateDepreciation({
   purchaseAmount: 20000,
-  purchaseDate: "2016-08-01",
+  purchaseDate: new Date("2016-08-01"),
   totalDepreciationYears: 5,
 })
 // => [{
@@ -73,7 +73,7 @@ Type: `number`
 
 #### purchaseDate
 
-Type: `string` - should be a correct date string. For example: "2016-08-01"
+Type: `Date`
 
 #### totalDepreciationYears
 

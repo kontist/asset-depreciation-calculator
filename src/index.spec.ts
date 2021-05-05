@@ -6,7 +6,7 @@ describe("calculateDepreciation()", () => {
   it("should handle other months", () => {
     expect(calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-08-01",
+      purchaseDate: new Date("2016-08-01"),
       totalDepreciationYears: 5,
     })).toEqual([{
       year: 2016,
@@ -56,7 +56,7 @@ describe("calculateDepreciation()", () => {
   it("should handle January", () => {
     expect(calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-01-01",
+      purchaseDate: new Date("2016-01-01"),
       totalDepreciationYears: 5,
     })).toEqual([{
       year: 2016,
@@ -99,7 +99,7 @@ describe("calculateDepreciation()", () => {
   it("should handle December", () => {
     expect(calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-12-01",
+      purchaseDate: new Date("2016-12-01"),
       totalDepreciationYears: 5,
     })).toEqual([{
       year: 2016,
@@ -149,7 +149,7 @@ describe("calculateDepreciation()", () => {
   it("should handle one year depreciation - purchase made in Jan", () => {
     expect(calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-01-01",
+      purchaseDate: new Date("2016-01-01"),
       totalDepreciationYears: 1,
     })).toEqual([{
       year: 2016,
@@ -164,7 +164,7 @@ describe("calculateDepreciation()", () => {
   it("should handle one year depreciation - purchase made after Jan", () => {
     expect(calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-05-01",
+      purchaseDate: new Date("2016-05-01"),
       totalDepreciationYears: 1,
     })).toEqual([{
       year: 2016,
@@ -186,7 +186,7 @@ describe("calculateDepreciation()", () => {
   it("should handle the case where good's value is less than 800", () => {
     expect(calculateDepreciation({
       purchaseAmount: 799,
-      purchaseDate: "2016-05-01",
+      purchaseDate: new Date("2016-05-01"),
       totalDepreciationYears: 5,
     })).toEqual([{
       year: 2016,
@@ -203,7 +203,7 @@ describe("errors handler", () => {
   it("should throw error if purchaseAmount is incorrect", () => {
     expect(() => calculateDepreciation({
       purchaseAmount: -1,
-      purchaseDate: "2016-01-01",
+      purchaseDate: new Date("2016-01-01"),
       totalDepreciationYears: 1,
     })).toThrow({
       name: 'TypeError',
@@ -211,21 +211,10 @@ describe("errors handler", () => {
     });
   });
 
-  it("should throw error if purchaseDate is incorrect", () => {
-    expect(() => calculateDepreciation({
-      purchaseAmount: 20000,
-      purchaseDate: "invalid-date",
-      totalDepreciationYears: 1,
-    })).toThrow({
-      name: 'TypeError',
-      message: '`purchaseDate` is invalid.'
-    });
-  });
-
   it("should throw error if totalDepreciationYears is incorrect", () => {
     expect(() => calculateDepreciation({
       purchaseAmount: 20000,
-      purchaseDate: "2016-01-01",
+      purchaseDate: new Date("2016-01-01"),
       totalDepreciationYears: 0,
     })).toThrow({
       name: 'TypeError',
