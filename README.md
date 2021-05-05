@@ -13,11 +13,11 @@ $ npm install asset-depreciation-calculator
 ```js
 const calculateDepreciation = require("asset-depreciation-calculator");
 
-calculateDepreciation(
-  20000,
-  "2016-08-01",
-  5,
-)
+calculateDepreciation({
+  purchaseAmount: 20000,
+  purchaseDate: "2016-08-01",
+  totalDepreciationYears: 5,
+})
 // => [{
 //   year: 2016,
 //   depreciationMonths: 5,
@@ -65,7 +65,7 @@ calculateDepreciation(
 
 ## API
 
-### calculateDepreciation(purchaseAmount, purchaseDate, totalDepreciationYears)
+### calculateDepreciation({ purchaseAmount, purchaseDate, totalDepreciationYears })
 
 #### purchaseAmount
 

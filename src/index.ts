@@ -2,13 +2,19 @@
 const MONTHS_IN_YEAR = 12;
 const MINIMUM_PURCHASE_AMOUNT = 800;
 
-export type DepreciationResult = {
+type DepreciationResult = {
   year: number;
   depreciationMonths: number;
   depreciationAmount: number;
   percentage: number;
   startValue: number;
   endValue: number;
+}
+
+type DepreciationInputs = {
+  purchaseAmount: number,
+  purchaseDate: string,
+  totalDepreciationYears: number
 }
 
 const assertPurchaseAmount = (amount: number) => {
@@ -54,11 +60,11 @@ const calculate = (
   };
 };
 
-const calculateDepreciation = (
-  purchaseAmount: number,
-  purchaseDate: string,
-  totalDepreciationYears: number,
-): DepreciationResult[] => {
+const calculateDepreciation = ({
+  purchaseAmount,
+  purchaseDate,
+  totalDepreciationYears,
+}: DepreciationInputs): DepreciationResult[] => {
   assertPurchaseAmount(purchaseAmount);
   assertPurchaseDate(purchaseDate);
   assertDepreciationYears(totalDepreciationYears);
