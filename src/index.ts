@@ -113,10 +113,7 @@ const calculateDepreciation = ({
       // If item is purchased in Jan, monthsLeftInLastYear is 0
       // If item is purchased in Dec, monthsLeftInLastYear is 11
       monthsLeftInLastYear = MONTHS_IN_YEAR - monthsLeftInFirstYear;
-    }
-
-    // Future years
-    if (index > 0) {
+    } else { // Future years
       const result = calculate(purchaseAmount, totalDepreciationYears, endAmount);
       results.push({
         year: purchaseYear + index,
