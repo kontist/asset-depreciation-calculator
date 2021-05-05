@@ -1,6 +1,6 @@
 import expect from "expect";
 
-import calculateDepreciation from ".";
+import calculateDepreciation, { toFixedTwo } from ".";
 
 describe("calculateDepreciation()", () => {
   it("should handle January", () => {
@@ -268,4 +268,19 @@ describe("errors handler", () => {
       message: '`totalDepreciationYears` is invalid.'
     });
   });
-})
+});
+
+describe("toFixedTwo()", () => {
+  it("should convert correctly", () => {
+    expect(toFixedTwo(1)).toEqual(1);
+    expect(toFixedTwo(1.1)).toEqual(1.1);
+    expect(toFixedTwo(1.9)).toEqual(1.9);
+    expect(toFixedTwo(1.004)).toEqual(1);
+    expect(toFixedTwo(1.005)).toEqual(1.01);
+    expect(toFixedTwo(1.11111)).toEqual(1.11);
+    expect(toFixedTwo(1.2222)).toEqual(1.22);
+    expect(toFixedTwo(1.5555)).toEqual(1.56);
+    expect(toFixedTwo(1.8888)).toEqual(1.89);
+    expect(toFixedTwo(1.9999)).toEqual(2);
+  });
+});

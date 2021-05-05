@@ -35,7 +35,12 @@ const assertDepreciationYears = (years: number) => {
   }
 };
 
-const toFixedTwo = (num: number): number => Math.round((num + Number.EPSILON) * 100) / 100;
+// Format a float to maximum 2 decimal places.
+// 1.1111 => 1.11
+// 1.5555 => 1.56
+// 1.9999 => 2
+// Checkout the unit test for more examples.
+export const toFixedTwo = (num: number): number => Math.round((num + Number.EPSILON) * 100) / 100;
 
 const calculate = (
   purchaseAmount: number,
