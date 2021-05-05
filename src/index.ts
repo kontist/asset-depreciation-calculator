@@ -43,12 +43,22 @@ const calculate = (
   endAmount: number;
 } => {
   const depreciationAmount = toFixedTwo((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
-  const percentage = toFixedTwo((depreciationAmount / purchaseAmount) * 100);
   const newEndAmount = toFixedTwo(previousEndAmount - depreciationAmount);
+
+  // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over.
+  // For example, if total is 3.1, divided by 3 it would be 1.33 / 1.33 / 1.33.
+  if (newEndAmount === 0.01) {
+    return {
+      depreciationAmount: previousEndAmount,
+      percentage: toFixedTwo((previousEndAmount / purchaseAmount) * 100),
+      startAmount: previousEndAmount,
+      endAmount: 0,
+    }
+  }
 
   return {
     depreciationAmount,
-    percentage,
+    percentage: toFixedTwo((depreciationAmount / purchaseAmount) * 100),
     startAmount: previousEndAmount,
     endAmount: newEndAmount,
   };

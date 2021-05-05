@@ -197,6 +197,42 @@ describe("calculateDepreciation()", () => {
       endAmount: 0,
     }])
   });
+
+  it("should not return endAmount of 0.01", () => {
+    expect(calculateDepreciation({
+      purchaseAmount: 2500,
+      purchaseDate: new Date("2018-02-01"),
+      totalDepreciationYears: 3,
+    })).toEqual([{
+      year: 2018,
+      depreciationMonths: 11,
+      depreciationAmount: 763.89,
+      percentage: 30.56,
+      startAmount: 2500,
+      endAmount: 1736.11,
+    }, {
+      year: 2019,
+      depreciationMonths: 12,
+      depreciationAmount: 833.33,
+      percentage: 33.33,
+      startAmount: 1736.11,
+      endAmount: 902.78,
+    }, {
+      year: 2020,
+      depreciationMonths: 12,
+      depreciationAmount: 833.33,
+      percentage: 33.33,
+      startAmount: 902.78,
+      endAmount: 69.45,
+    }, {
+      year: 2021,
+      depreciationMonths: 1,
+      depreciationAmount: 69.45,
+      percentage: 2.78,
+      startAmount: 69.45,
+      endAmount: 0,
+    }])
+  });
 });
 
 describe("errors handler", () => {
