@@ -1,6 +1,6 @@
 
 const MONTHS_IN_YEAR = 12;
-const MINIMUM_PURCHASE_AMOUNT = 800;
+const MINIMUM_PURCHASE_AMOUNT = 80000;
 
 type DepreciationResult = {
   year: number;
@@ -18,7 +18,7 @@ type DepreciationInputs = {
 }
 
 export const assertPurchaseAmount = (amount: number) => {
-  if (isNaN(amount) || amount < 0) {
+  if (isNaN(amount) || amount < 0 || amount % 1 !== 0) { // Check if amount is integer, not float.
     throw new TypeError('`purchaseAmount` is invalid.');
   }
 };
@@ -35,12 +35,12 @@ export const assertDepreciationYears = (years: number) => {
   }
 };
 
-// Format a float to maximum 2 decimal places.
-// 1.1111 => 1.11
-// 1.5555 => 1.56
-// 1.9999 => 2
-// Checkout the unit test for more examples.
-export const toFixedTwo = (num: number): number => Math.round((num + Number.EPSILON) * 100) / 100;
+// Percentage can be between 0 - 1. It can have 4 decimal places.
+// For example:
+// - 0.01 is 1%
+// - 0.001 is 0.1%
+// - 0.0001 is 0.01%
+export const formatPercentage = (num: number): number => Math.round((num + Number.EPSILON) * 10000) / 10000;
 
 const calculate = (
   purchaseAmount: number,
@@ -53,15 +53,15 @@ const calculate = (
   startAmount: number;
   endAmount: number;
 } => {
-  const depreciationAmount = toFixedTwo((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
-  const newEndAmount = toFixedTwo(previousEndAmount - depreciationAmount);
+  const depreciationAmount = Math.round((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
+  const newEndAmount = previousEndAmount - depreciationAmount;
 
   // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over.
-  // For example, if total is 3.1, divided by 3 it would be 1.33 / 1.33 / 1.33.
-  if (newEndAmount === 0.01) {
+  // For example, if total is 31, divided by 3 it would be 10 / 10 / 10.
+  if (newEndAmount === 1) {
     return {
       depreciationAmount: previousEndAmount,
-      percentage: toFixedTwo((previousEndAmount / purchaseAmount) * 100),
+      percentage: formatPercentage((previousEndAmount / purchaseAmount)),
       startAmount: previousEndAmount,
       endAmount: 0,
     }
@@ -69,7 +69,7 @@ const calculate = (
 
   return {
     depreciationAmount,
-    percentage: toFixedTwo((depreciationAmount / purchaseAmount) * 100),
+    percentage: formatPercentage((depreciationAmount / purchaseAmount)),
     startAmount: previousEndAmount,
     endAmount: newEndAmount,
   };
@@ -97,7 +97,7 @@ const calculateDepreciation = ({
       year: purchaseYear,
       depreciationMonths: MONTHS_IN_YEAR - purchaseMonth + 1,
       depreciationAmount: purchaseAmount,
-      percentage: 100,
+      percentage: 1,
       startAmount: purchaseAmount,
       endAmount: 0,
     }]
