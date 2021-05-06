@@ -1,7 +1,6 @@
 import expect from "expect";
 
 import calculateDepreciation, {
-  formatPercentage,
   assertPurchaseAmount,
   assertPurchaseDate,
   assertDepreciationYears,
