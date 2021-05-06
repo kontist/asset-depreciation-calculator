@@ -17,19 +17,19 @@ type DepreciationInputs = {
   totalDepreciationYears: number
 }
 
-export const assertPurchaseAmount = (amount: number) => {
+export const assertPurchaseAmount = (amount: number): void => {
   if (isNaN(amount) || amount < 0 || amount % 1 !== 0) { // Check if amount is integer, not float.
     throw new TypeError('`purchaseAmount` is invalid.');
   }
 };
 
-export const assertPurchaseDate = (date: Date) => {
+export const assertPurchaseDate = (date: Date): void => {
   if (isNaN(date.valueOf())) {
     throw new TypeError('`purchaseDate` is invalid.');
   }
 };
 
-export const assertDepreciationYears = (years: number) => {
+export const assertDepreciationYears = (years: number): void => {
   if (isNaN(years) || years < 1 || years % 1 !== 0) { // Check if years is integer, not float.
     throw new TypeError('`totalDepreciationYears` is invalid.');
   }
@@ -82,7 +82,7 @@ const calculateDepreciation = ({
   const results: DepreciationResult[] = [];
 
   let endAmount: number = purchaseAmount;
-  let monthsLeftInLastYear: number = 0;
+  let monthsLeftInLastYear = 0;
 
   // If the price of the good is less than MINIMUM_PURCHASE_AMOUNT, the year is set to 0 automatically.
   if (purchaseAmount < MINIMUM_PURCHASE_AMOUNT) {
