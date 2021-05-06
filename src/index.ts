@@ -35,13 +35,6 @@ export const assertDepreciationYears = (years: number) => {
   }
 };
 
-// Percentage can be between 0 - 1. It can have 4 decimal places.
-// For example:
-// - 0.01 is 1%
-// - 0.001 is 0.1%
-// - 0.0001 is 0.01%
-export const formatPercentage = (num: number): number => Math.round((num + Number.EPSILON) * 10000) / 10000;
-
 const calculate = (
   purchaseAmount: number,
   totalDepreciationYears: number,
@@ -61,7 +54,7 @@ const calculate = (
   if (newEndAmount === 1) {
     return {
       depreciationAmount: previousEndAmount,
-      percentage: formatPercentage((previousEndAmount / purchaseAmount)),
+      percentage: previousEndAmount / purchaseAmount,
       startAmount: previousEndAmount,
       endAmount: 0,
     }
@@ -69,7 +62,7 @@ const calculate = (
 
   return {
     depreciationAmount,
-    percentage: formatPercentage((depreciationAmount / purchaseAmount)),
+    percentage: depreciationAmount / purchaseAmount,
     startAmount: previousEndAmount,
     endAmount: newEndAmount,
   };

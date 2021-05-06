@@ -60,7 +60,7 @@ describe("calculateDepreciation()", () => {
       year: 2016,
       depreciationMonths: 1,
       depreciationAmount: 33333,
-      percentage: 0.0167,
+      percentage: 0.0166665,
       startAmount: 2000000,
       endAmount: 1966667,
     }, {
@@ -95,7 +95,7 @@ describe("calculateDepreciation()", () => {
       year: 2021,
       depreciationMonths: 11,
       depreciationAmount: 366667,
-      percentage: 0.1833,
+      percentage: 0.1833335,
       startAmount: 366667,
       endAmount: 0,
     }])
@@ -110,7 +110,7 @@ describe("calculateDepreciation()", () => {
       year: 2016,
       depreciationMonths: 5,
       depreciationAmount: 166667,
-      percentage: 0.0833,
+      percentage: 0.0833335,
       startAmount: 2000000,
       endAmount: 1833333,
     }, {
@@ -145,7 +145,7 @@ describe("calculateDepreciation()", () => {
       year: 2021,
       depreciationMonths: 7,
       depreciationAmount: 233333,
-      percentage: .1167,
+      percentage: 0.1166665,
       startAmount: 233333,
       endAmount: 0,
     }])
@@ -175,14 +175,14 @@ describe("calculateDepreciation()", () => {
       year: 2016,
       depreciationMonths: 8,
       depreciationAmount: 1333333,
-      percentage: 0.6667,
+      percentage: 0.6666665,
       startAmount: 2000000,
       endAmount: 666667,
     }, {
       year: 2017,
       depreciationMonths: 4,
       depreciationAmount: 666667,
-      percentage: 0.3333,
+      percentage: 0.3333335,
       startAmount: 666667,
       endAmount: 0,
     }])
@@ -212,28 +212,28 @@ describe("calculateDepreciation()", () => {
       year: 2018,
       depreciationMonths: 11,
       depreciationAmount: 76389,
-      percentage: 0.3056,
+      percentage: 0.305556,
       startAmount: 250000,
       endAmount: 173611,
     }, {
       year: 2019,
       depreciationMonths: 12,
       depreciationAmount: 83333,
-      percentage: 0.3333,
+      percentage: 0.333332,
       startAmount: 173611,
       endAmount: 90278,
     }, {
       year: 2020,
       depreciationMonths: 12,
       depreciationAmount: 83333,
-      percentage: 0.3333,
+      percentage: 0.333332,
       startAmount: 90278,
       endAmount: 6945,
     }, {
       year: 2021,
       depreciationMonths: 1,
       depreciationAmount: 6945,
-      percentage: 0.0278,
+      percentage: 0.02778,
       startAmount: 6945,
       endAmount: 0,
     }])
@@ -272,18 +272,6 @@ describe("errors handler", () => {
       name: 'TypeError',
       message: '`totalDepreciationYears` is invalid.'
     });
-  });
-});
-
-describe("formatPercentage()", () => {
-  it("should format percentage correctly", () => {
-    expect(formatPercentage(1)).toEqual(1);
-    expect(formatPercentage(0.9)).toEqual(0.9);
-    expect(formatPercentage(0.004)).toEqual(0.004);
-    expect(formatPercentage(0.11111)).toEqual(0.1111);
-    expect(formatPercentage(0.11114)).toEqual(0.1111);
-    expect(formatPercentage(0.11115)).toEqual(0.1112);
-    expect(formatPercentage(0.11116)).toEqual(0.1112);
   });
 });
 
