@@ -17,20 +17,20 @@ type DepreciationInputs = {
   totalDepreciationYears: number
 }
 
-const assertPurchaseAmount = (amount: number) => {
-  if (amount < 0) {
+export const assertPurchaseAmount = (amount: number) => {
+  if (isNaN(amount) || amount < 0) {
     throw new TypeError('`purchaseAmount` is invalid.');
   }
 };
 
-const assertPurchaseDate = (date: Date) => {
+export const assertPurchaseDate = (date: Date) => {
   if (isNaN(date.valueOf())) {
     throw new TypeError('`purchaseDate` is invalid.');
   }
 };
 
-const assertDepreciationYears = (years: number) => {
-  if (years < 1) {
+export const assertDepreciationYears = (years: number) => {
+  if (isNaN(years) || years < 1 || years % 1 !== 0) { // Check if years is integer, not float.
     throw new TypeError('`totalDepreciationYears` is invalid.');
   }
 };

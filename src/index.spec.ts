@@ -1,6 +1,11 @@
 import expect from "expect";
 
-import calculateDepreciation, { toFixedTwo } from ".";
+import calculateDepreciation, {
+  toFixedTwo,
+  assertPurchaseAmount,
+  assertPurchaseDate,
+  assertDepreciationYears,
+} from ".";
 
 describe("calculateDepreciation()", () => {
   it("should handle January", () => {
@@ -282,5 +287,47 @@ describe("toFixedTwo()", () => {
     expect(toFixedTwo(1.5555)).toEqual(1.56);
     expect(toFixedTwo(1.8888)).toEqual(1.89);
     expect(toFixedTwo(1.9999)).toEqual(2);
+  });
+});
+
+describe("assertPurchaseAmount()", () => {
+  it("should throw error", () => {
+    expect(() => assertPurchaseAmount(-1)).toThrow({
+      name: 'TypeError',
+      message: '`purchaseAmount` is invalid.'
+    });
+
+    expect(() => assertPurchaseAmount(Number("1,5"))).toThrow({
+      name: 'TypeError',
+      message: '`purchaseAmount` is invalid.'
+    });
+  });
+});
+
+describe("assertPurchaseDate()", () => {
+  it("should throw error", () => {
+    expect(() => assertPurchaseDate(new Date("invalid-date"))).toThrow({
+      name: 'TypeError',
+      message: '`purchaseDate` is invalid.'
+    });
+  });
+});
+
+describe("assertDepreciationYears()", () => {
+  it("should throw error", () => {
+    expect(() => assertDepreciationYears(-1)).toThrow({
+      name: 'TypeError',
+      message: '`totalDepreciationYears` is invalid.'
+    });
+
+    expect(() => assertDepreciationYears(1.5)).toThrow({
+      name: 'TypeError',
+      message: '`totalDepreciationYears` is invalid.'
+    });
+
+    expect(() => assertDepreciationYears(Number("1,5"))).toThrow({
+      name: 'TypeError',
+      message: '`totalDepreciationYears` is invalid.'
+    });
   });
 });
