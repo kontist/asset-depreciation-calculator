@@ -1,6 +1,5 @@
 
 const MONTHS_IN_YEAR = 12;
-const MINIMUM_PURCHASE_AMOUNT = 80000;
 
 type DepreciationResult = {
   year: number;
@@ -83,18 +82,6 @@ const calculateDepreciation = ({
 
   let endAmount: number = purchaseAmount;
   let monthsLeftInLastYear = 0;
-
-  // If the price of the good is less than MINIMUM_PURCHASE_AMOUNT, the year is set to 0 automatically.
-  if (purchaseAmount < MINIMUM_PURCHASE_AMOUNT) {
-    return [{
-      year: purchaseYear,
-      depreciationMonths: MONTHS_IN_YEAR - purchaseMonth + 1,
-      depreciationAmount: purchaseAmount,
-      percentage: 1,
-      startAmount: purchaseAmount,
-      endAmount: 0,
-    }]
-  }
 
   for (let index = 0; index < totalDepreciationYears; index++) {
     // Current year

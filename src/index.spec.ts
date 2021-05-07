@@ -187,21 +187,6 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should handle the case where good's value is less than 80000 cents", () => {
-    expect(calculateDepreciation({
-      purchaseAmount: 79900,
-      purchaseDate: new Date("2016-05-01"),
-      totalDepreciationYears: 5,
-    })).toEqual([{
-      year: 2016,
-      depreciationMonths: 8,
-      depreciationAmount: 79900,
-      percentage: 1,
-      startAmount: 79900,
-      endAmount: 0,
-    }])
-  });
-
   it("should not return endAmount of 1", () => {
     expect(calculateDepreciation({
       purchaseAmount: 250000,
