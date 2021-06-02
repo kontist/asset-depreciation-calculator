@@ -50,7 +50,8 @@ const calculate = (
 
   // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over.
   // For example, if total is 31, divided by 3 it would be 10 / 10 / 10.
-  if (newEndAmount === 1) {
+  // Also, there's a case, such as 29, where it returns negative result.
+  if (newEndAmount <= 1) {
     return {
       depreciationAmount: previousEndAmount,
       percentage: previousEndAmount / purchaseAmount,
