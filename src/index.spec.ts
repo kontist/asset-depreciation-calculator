@@ -187,6 +187,21 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
+  it("should handle instant depreciation", () => {
+    expect(calculateDepreciation({
+      purchaseAmount: 2000000,
+      purchaseDate: new Date("2016-05-01"),
+      totalDepreciationYears: 0,
+    })).toEqual([{
+      year: 2016,
+      depreciationMonths: 0,
+      depreciationAmount: 2000000,
+      percentage: 1,
+      startAmount: 2000000,
+      endAmount: 0,
+    }])
+  });
+
   it("should not return endAmount of 1", () => {
     expect(calculateDepreciation({
       purchaseAmount: 250000,
@@ -284,7 +299,7 @@ describe("errors handler", () => {
     expect(() => calculateDepreciation({
       purchaseAmount: 2000000,
       purchaseDate: new Date("2016-01-01"),
-      totalDepreciationYears: 0,
+      totalDepreciationYears: -1,
     })).toThrow({
       name: 'TypeError',
       message: '`totalDepreciationYears` is invalid.'
