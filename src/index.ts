@@ -29,7 +29,7 @@ export const assertPurchaseDate = (date: Date): void => {
 };
 
 export const assertDepreciationYears = (years: number): void => {
-  if (isNaN(years) || years < 1 || years % 1 !== 0) { // Check if years is integer, not float.
+  if (isNaN(years) || years < 0 || years % 1 !== 0) { // Check if years is integer, not float.
     throw new TypeError('`totalDepreciationYears` is invalid.');
   }
 };
@@ -83,6 +83,17 @@ const calculateDepreciation = ({
 
   let endAmount: number = purchaseAmount;
   let monthsLeftInLastYear = 0;
+
+  if (totalDepreciationYears === 0) {
+    return [{
+      year: purchaseYear,
+      depreciationMonths: 0,
+      depreciationAmount: purchaseAmount,
+      percentage: 1,
+      startAmount: purchaseAmount,
+      endAmount: 0,
+    }]
+  }
 
   for (let index = 0; index < totalDepreciationYears; index++) {
     // Current year
