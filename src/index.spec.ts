@@ -238,6 +238,73 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
+  it("should not return endAmount of 1 for small amount like 31", () => {
+    expect(calculateDepreciation({
+      purchaseAmount: 31,
+      purchaseDate: new Date("2018-01-01"),
+      totalDepreciationYears: 3,
+    })).toEqual([{
+      year: 2018,
+      depreciationMonths: 12,
+      depreciationAmount: 10,
+      percentage: 0.3225806451612903,
+      startAmount: 31,
+      endAmount: 21,
+    }, {
+      year: 2019,
+      depreciationMonths: 12,
+      depreciationAmount: 10,
+      percentage: 0.3225806451612903,
+      startAmount: 21,
+      endAmount: 11,
+    }, {
+      year: 2020,
+      depreciationMonths: 12,
+      depreciationAmount: 11,
+      percentage: 0.3548387096774194,
+      startAmount: 11,
+      endAmount: 0,
+    }])
+  });
+
+  it("should not return endAmount of 1 for small amount like 31 purchase after Jan", () => {
+    expect(calculateDepreciation({
+      purchaseAmount: 31,
+      purchaseDate: new Date("2018-02-01"),
+      totalDepreciationYears: 3,
+    })).toEqual([{
+      year: 2018,
+      depreciationMonths: 11,
+      depreciationAmount: 9,
+      percentage: 0.2903225806451613,
+      startAmount: 31,
+      endAmount: 22,
+    }, {
+      year: 2019,
+      depreciationMonths: 12,
+      depreciationAmount: 10,
+      percentage: 0.3225806451612903,
+      startAmount: 22,
+      endAmount: 12,
+    }, {
+      year: 2020,
+      depreciationMonths: 12,
+      depreciationAmount: 10,
+      percentage: 0.3225806451612903,
+      startAmount: 12,
+      endAmount: 2,
+    },
+    {
+      year: 2021,
+      depreciationMonths: 1,
+      depreciationAmount: 2,
+      percentage: 0.06451612903225806,
+      startAmount: 2,
+      endAmount: 0,
+    }])
+  });
+
+
   it("should not return endAmount of -1", () => {
     expect(calculateDepreciation({
       purchaseAmount: 199900,
