@@ -38,7 +38,8 @@ const calculate = (
   purchaseAmount: number,
   totalDepreciationYears: number,
   previousEndAmount: number,
-  monthsLeft: number = MONTHS_IN_YEAR
+  monthsLeft: number,
+  isLastPart: boolean = false,
 ): {
   depreciationAmount: number;
   percentage: number;
@@ -48,10 +49,11 @@ const calculate = (
   const depreciationAmount = Math.round((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
   const newEndAmount = previousEndAmount - depreciationAmount;
 
-  // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over.
+  // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over in last part.
   // For example, if total is 31, divided by 3 it would be 10 / 10 / 10.
   // Also, there's a case, such as 29, where it returns negative result.
-  if (depreciationAmount / previousEndAmount >= 0.99) {
+  // So, had been added isLastPart to input parametes for handle this case. 
+  if (isLastPart) {
     return {
       depreciationAmount: previousEndAmount,
       percentage: previousEndAmount / purchaseAmount,
@@ -82,8 +84,7 @@ const calculateDepreciation = ({
   const results: DepreciationResult[] = [];
 
   let endAmount: number = purchaseAmount;
-  let monthsLeftInLastYear = 0;
-
+  
   if (totalDepreciationYears === 0) {
     return [{
       year: purchaseYear,
@@ -95,40 +96,25 @@ const calculateDepreciation = ({
     }]
   }
 
-  for (let index = 0; index < totalDepreciationYears; index++) {
-    // Current year
-    if (index === 0) {
-      const monthsLeftInFirstYear = MONTHS_IN_YEAR - purchaseMonth + 1;
-      const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsLeftInFirstYear);
-      results.push({
-        year: purchaseYear,
-        depreciationMonths: monthsLeftInFirstYear,
-        ...result,
-      });
-      endAmount = result.endAmount;
+  const parts: number = purchaseMonth > 1 ? totalDepreciationYears + 1 : totalDepreciationYears;
+  const monthInFirstYear : number = MONTHS_IN_YEAR - purchaseMonth + 1;
+  const monthInLastYear : number = monthInFirstYear === MONTHS_IN_YEAR ? MONTHS_IN_YEAR : MONTHS_IN_YEAR - monthInFirstYear;
 
-      // If item is purchased in Jan, monthsLeftInLastYear is 0
-      // If item is purchased in Dec, monthsLeftInLastYear is 11
-      monthsLeftInLastYear = MONTHS_IN_YEAR - monthsLeftInFirstYear;
-    } else { // Future years
-      const result = calculate(purchaseAmount, totalDepreciationYears, endAmount);
-      results.push({
-        year: purchaseYear + index,
-        depreciationMonths: MONTHS_IN_YEAR,
-        ...result,
-      });
-      endAmount = result.endAmount;
-    }
-  }
+  let monthInThisYear : number = monthInFirstYear;
+  endAmount = purchaseAmount;
 
-  if (monthsLeftInLastYear > 0) {
+  for (let index = 0; index < parts; index++) {        
+    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthInThisYear, index === parts - 1);
     results.push({
-      year: purchaseYear + totalDepreciationYears,
-      depreciationMonths: monthsLeftInLastYear,
-      ...calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsLeftInLastYear),
+      year: purchaseYear + index,
+      depreciationMonths: monthInThisYear,
+      ...result,
     });
+    endAmount = result.endAmount;  
+    // calculate month in year for next step and control the last year case.
+    monthInThisYear = (index + 1 === parts - 1) ? monthInLastYear : MONTHS_IN_YEAR;
   }
-
+  
   return results;
 };
 
