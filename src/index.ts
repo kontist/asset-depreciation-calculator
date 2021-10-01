@@ -52,7 +52,7 @@ const calculate = (
   // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over in the last part.
   // For example, if total is 31, divided by 3 it would be 10 / 10 / 10.
   // Also, there's a case, such as 29, where it returns negative result.
-  // So, had been added isLastPart to input parametes for handle this case. 
+  // Therefore, we explicitly depreciate the previous year’s end amount in the last part.
   if (isLastPart) {
     return {
       depreciationAmount: previousEndAmount,
