@@ -39,7 +39,7 @@ const calculate = (
   totalDepreciationYears: number,
   previousEndAmount: number,
   monthsLeft: number,
-  isLastPart: boolean = false,
+  isLastPart: boolean,
 ): {
   depreciationAmount: number;
   percentage: number;
@@ -84,7 +84,7 @@ const calculateDepreciation = ({
   const results: DepreciationResult[] = [];
 
   let endAmount: number = purchaseAmount;
-  
+
   if (totalDepreciationYears === 0) {
     return [{
       year: purchaseYear,
@@ -97,24 +97,23 @@ const calculateDepreciation = ({
   }
 
   const parts: number = purchaseMonth > 1 ? totalDepreciationYears + 1 : totalDepreciationYears;
-  const monthsInFirstYear : number = MONTHS_IN_YEAR - purchaseMonth + 1;
-  const monthInLastYear : number = monthInFirstYear === MONTHS_IN_YEAR ? MONTHS_IN_YEAR : MONTHS_IN_YEAR - monthInFirstYear;
+  const monthsInFirstYear: number = MONTHS_IN_YEAR - purchaseMonth + 1;
+  const monthsInLastYear: number = monthsInFirstYear === MONTHS_IN_YEAR ? MONTHS_IN_YEAR : MONTHS_IN_YEAR - monthsInFirstYear;
 
-  let monthInThisYear : number = monthInFirstYear;
-  endAmount = purchaseAmount;
+  let monthsInThisYear: number = monthsInFirstYear;
 
-  for (let index = 0; index < parts; index++) {        
-    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthInThisYear, index === parts - 1);
+  for (let index = 0; index < parts; index++) {
+    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsInThisYear, index === parts - 1);
     results.push({
       year: purchaseYear + index,
-      depreciationMonths: monthInThisYear,
+      depreciationMonths: monthsInThisYear,
       ...result,
     });
-    endAmount = result.endAmount;  
-    // calculate month in year for next step and control the last year case.
-    monthInThisYear = (index + 1 === parts - 1) ? monthInLastYear : MONTHS_IN_YEAR;
+    endAmount = result.endAmount;
+    // calculate months in year for next step and control the last year case.
+    monthsInThisYear = (index + 1 === parts - 1) ? monthsInLastYear : MONTHS_IN_YEAR;
   }
-  
+
   return results;
 };
 
