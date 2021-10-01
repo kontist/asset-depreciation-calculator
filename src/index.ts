@@ -97,21 +97,21 @@ const calculateDepreciation = ({
   }
 
   const parts: number = purchaseMonth > 1 ? totalDepreciationYears + 1 : totalDepreciationYears;
-  const monthsInFirstYear: number = MONTHS_IN_YEAR - purchaseMonth + 1;
-  const monthsInLastYear: number = monthsInFirstYear === MONTHS_IN_YEAR ? MONTHS_IN_YEAR : MONTHS_IN_YEAR - monthsInFirstYear;
 
-  let monthsInThisYear: number = monthsInFirstYear;
+  let monthsInEachYear: number[] = Array(parts).fill(MONTHS_IN_YEAR);
+  //months in fisrt year
+  monthsInEachYear[0] = MONTHS_IN_YEAR - purchaseMonth + 1;
+  //months in last year
+  monthsInEachYear[monthsInEachYear.length - 1] = purchaseMonth - 1 > 0 ? purchaseMonth - 1 : MONTHS_IN_YEAR;
 
   for (let index = 0; index < parts; index++) {
-    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsInThisYear, index === parts - 1);
+    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsInEachYear[index], index === parts - 1);
     results.push({
       year: purchaseYear + index,
-      depreciationMonths: monthsInThisYear,
+      depreciationMonths: monthsInEachYear[index],
       ...result,
     });
     endAmount = result.endAmount;
-    // calculate months in year for next step and control the last year case.
-    monthsInThisYear = (index + 1 === parts - 1) ? monthsInLastYear : MONTHS_IN_YEAR;
   }
 
   return results;
