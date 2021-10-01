@@ -97,7 +97,7 @@ const calculateDepreciation = ({
   }
 
   const parts: number = purchaseMonth > 1 ? totalDepreciationYears + 1 : totalDepreciationYears;
-  const monthInFirstYear : number = MONTHS_IN_YEAR - purchaseMonth + 1;
+  const monthsInFirstYear : number = MONTHS_IN_YEAR - purchaseMonth + 1;
   const monthInLastYear : number = monthInFirstYear === MONTHS_IN_YEAR ? MONTHS_IN_YEAR : MONTHS_IN_YEAR - monthInFirstYear;
 
   let monthInThisYear : number = monthInFirstYear;
