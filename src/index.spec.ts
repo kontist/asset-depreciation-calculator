@@ -267,7 +267,7 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should not return endAmount of 1 for small amount like 31 purchase after Jan", () => {
+  it("should not return endAmount of 1 for small amount like 31 purchase - purchase made after Jan", () => {
     expect(calculateDepreciation({
       purchaseAmount: 31,
       purchaseDate: new Date("2018-02-01"),
