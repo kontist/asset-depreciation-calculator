@@ -202,7 +202,7 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should not return endAmount of 1", () => {
+  it("should return endAmount of 0", () => {
     expect(calculateDepreciation({
       purchaseAmount: 250000,
       purchaseDate: new Date("2018-02-01"),
@@ -238,7 +238,7 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should not return endAmount of 1 for small amount like 31", () => {
+  it("should return endAmount of 0 for small amount like 31", () => {
     expect(calculateDepreciation({
       purchaseAmount: 31,
       purchaseDate: new Date("2018-01-01"),
@@ -267,7 +267,7 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should not return endAmount of 1 for small amount like 31 - purchase made after Jan", () => {
+  it("should return endAmount of 0 for small amount like 31 - purchase made after Jan", () => {
     expect(calculateDepreciation({
       purchaseAmount: 31,
       purchaseDate: new Date("2018-02-01"),
@@ -303,7 +303,6 @@ describe("calculateDepreciation()", () => {
       endAmount: 0,
     }])
   });
-
 
   it("should not return endAmount of -1", () => {
     expect(calculateDepreciation({
@@ -406,79 +405,6 @@ describe("calculateDepreciation()", () => {
         depreciationAmount: 11717,
         percentage: 0.09526016260162602,
         startAmount: 11717,
-        endAmount: 0
-      }
-    ]);
-  });
-
-  it("should not return endAmount of 2", () => {
-    expect(calculateDepreciation({
-      purchaseAmount: 1230000,
-      purchaseDate: new Date("2021-09-29"),
-      totalDepreciationYears: 7,
-    })).toEqual([
-      {
-        year: 2021,
-        depreciationMonths: 4,
-        depreciationAmount: 58571,
-        percentage: 0.04761869918699187,
-        startAmount: 1230000,
-        endAmount: 1171429
-      },
-      {
-        year: 2022,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 1171429,
-        endAmount: 995715
-      },
-      {
-        year: 2023,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 995715,
-        endAmount: 820001
-      },
-      {
-        year: 2024,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 820001,
-        endAmount: 644287
-      },
-      {
-        year: 2025,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 644287,
-        endAmount: 468573
-      },
-      {
-        year: 2026,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 468573,
-        endAmount: 292859
-      },
-      {
-        year: 2027,
-        depreciationMonths: 12,
-        depreciationAmount: 175714,
-        percentage: 0.14285691056910568,
-        startAmount: 292859,
-        endAmount: 117145
-      },
-      {
-        year: 2028,
-        depreciationMonths: 8,
-        depreciationAmount: 117145,
-        percentage: 0.09523983739837398,
-        startAmount: 117145,
         endAmount: 0
       }
     ]);
