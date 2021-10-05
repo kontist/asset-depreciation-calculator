@@ -238,7 +238,7 @@ describe("calculateDepreciation()", () => {
     }])
   });
 
-  it("should return endAmount of 0 for small amount like 31", () => {
+  it("should return endAmount of 0 for small amount like 31 - purchase made in Jan", () => {
     expect(calculateDepreciation({
       purchaseAmount: 31,
       purchaseDate: new Date("2018-01-01"),
