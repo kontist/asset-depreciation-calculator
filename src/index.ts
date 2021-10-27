@@ -34,42 +34,6 @@ export const assertDepreciationYears = (years: number): void => {
   }
 };
 
-const calculate = (
-  purchaseAmount: number,
-  totalDepreciationYears: number,
-  previousEndAmount: number,
-  monthsLeft: number,
-  isLastPart: boolean,
-): {
-  depreciationAmount: number;
-  percentage: number;
-  startAmount: number;
-  endAmount: number;
-} => {
-  const depreciationAmount = Math.round((purchaseAmount / totalDepreciationYears / MONTHS_IN_YEAR) * monthsLeft);
-  const newEndAmount = previousEndAmount - depreciationAmount;
-
-  // Because of the rounding, even if the calculation is correct, sometimes there is €0.01 left over in the last part.
-  // For example, if total is 31, divided by 3 it would be 10 / 10 / 10.
-  // Also, there's a case, such as 29, where it returns negative result.
-  // Therefore, we explicitly depreciate the previous year’s end amount in the last part.
-  if (isLastPart) {
-    return {
-      depreciationAmount: previousEndAmount,
-      percentage: previousEndAmount / purchaseAmount,
-      startAmount: previousEndAmount,
-      endAmount: 0,
-    }
-  }
-
-  return {
-    depreciationAmount,
-    percentage: depreciationAmount / purchaseAmount,
-    startAmount: previousEndAmount,
-    endAmount: newEndAmount,
-  };
-};
-
 const calculateDepreciation = ({
   purchaseAmount,
   purchaseDate,
@@ -79,15 +43,9 @@ const calculateDepreciation = ({
   assertPurchaseDate(purchaseDate);
   assertDepreciationYears(totalDepreciationYears);
 
-  const purchaseMonth: number = new Date(purchaseDate).getMonth() + 1;
-  const purchaseYear: number = new Date(purchaseDate).getFullYear();
-  const results: DepreciationResult[] = [];
-
-  let endAmount: number = purchaseAmount;
-
   if (totalDepreciationYears === 0) {
     return [{
-      year: purchaseYear,
+      year: purchaseDate.getFullYear(),
       depreciationMonths: 0,
       depreciationAmount: purchaseAmount,
       percentage: 1,
@@ -96,22 +54,59 @@ const calculateDepreciation = ({
     }]
   }
 
-  const parts: number = purchaseMonth > 1 ? totalDepreciationYears + 1 : totalDepreciationYears;
+  const startDate = new Date(Date.UTC(
+    purchaseDate.getFullYear(),
+    purchaseDate.getMonth(),
+    1
+  ));
+  const endDate = new Date(Date.UTC(
+    startDate.getFullYear() + totalDepreciationYears,
+    startDate.getMonth() - 1,
+    1
+  ));
+  const depreciationAmountPerMonth = purchaseAmount / (totalDepreciationYears * MONTHS_IN_YEAR);
 
-  const monthsInEachYear: number[] = Array(parts).fill(MONTHS_IN_YEAR);
-  // Months in first year
-  monthsInEachYear[0] = MONTHS_IN_YEAR - purchaseMonth + 1;
-  // Months in last year
-  monthsInEachYear[monthsInEachYear.length - 1] = purchaseMonth > 1 ? purchaseMonth - 1 : MONTHS_IN_YEAR;
+  const results: DepreciationResult[] = [];
+  let runningAmountForYear = 0;
+  let runningMonthsForYear = 0;
+  let remainders = 0;
 
-  for (let index = 0; index < parts; index++) {
-    const result = calculate(purchaseAmount, totalDepreciationYears, endAmount, monthsInEachYear[index], index === parts - 1);
-    results.push({
-      year: purchaseYear + index,
-      depreciationMonths: monthsInEachYear[index],
-      ...result,
-    });
-    endAmount = result.endAmount;
+  for (let date = new Date(startDate); date <= endDate; date.setUTCMonth(date.getUTCMonth() + 1)) {
+    runningAmountForYear += depreciationAmountPerMonth;
+    runningMonthsForYear++;
+
+    // At the end of the year or when we have reached the end of the
+    // depreciation period, we add the year to the results.
+    if (date.getMonth() === 11 || date.getTime() === endDate.getTime()) {
+      let depreciationAmount = Math.round(runningAmountForYear);
+
+      remainders += runningAmountForYear - depreciationAmount;
+
+      // In the last year, we add all remainders to avoid rounding errors.
+      // For example, when depreciating 31 over 3 years, the last year’s
+      // depreciation amount should be 11 instead of 10.
+      if (date.getTime() === endDate.getTime()) {
+        depreciationAmount = Math.round(depreciationAmount + remainders);
+      }
+
+      // In the first year, the start amount is the purchase amount.
+      // In all other years, the start amount is last year’s end amount.
+      const startAmount = results.length > 0
+        ? results[results.length - 1].endAmount
+        : purchaseAmount;
+
+      results.push({
+        year: date.getFullYear(),
+        depreciationMonths: runningMonthsForYear,
+        depreciationAmount,
+        percentage: depreciationAmount / purchaseAmount,
+        startAmount,
+        endAmount: startAmount - depreciationAmount
+      });
+
+      runningAmountForYear = 0;
+      runningMonthsForYear = 0;
+    }
   }
 
   return results;
